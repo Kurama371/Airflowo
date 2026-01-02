@@ -1,21 +1,9 @@
-import redis
-import threading
-import time
+from helpers.broker_client import broker_client
 
-r = redis.Redis(host="localhost", port=1337, decode_responses=True)
-broker = r.pubsub()
 
-def listen():
-    broker.subscribe("penguinscanfly")
-    print("[B] Listening")
-
-    for message in broker.listen():
-        if message["type"] == "message":
-            print("[B] Received: ", message["data"])
-
-listener = threading.Tread(target=listen, daemon=True)
-listener.start()
+broker_client_2 = broker_client("penguinscanfly","Minecraft")
+broker_client_2.start()
 
 while True:
     msg = input("Message to send: ")
-    r.publish("chat", msg)
+    broker_client_2.send(msg)
