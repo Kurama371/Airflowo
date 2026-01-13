@@ -1,3 +1,4 @@
+
 from javascript import require, On, Once, console
 from helpers.broker_client import broker_client
 from helpers.minecraft.message_handler import handle_message
@@ -8,6 +9,7 @@ class minecraft_client():
     def __init__(self, channel_name, client_name):
         self.client_name = client_name
         self.broker_instance = broker_client(channel_name, client_name)
+        self.broker_instance.handler = self.handle_broker_msg
         self.broker_instance.start()
         self.state = "BOOTING"
         
@@ -58,5 +60,7 @@ class minecraft_client():
             #client.broker_instance.send(f"MC_MSG:{client.client_name}:{sender} {message}")
             if position != "chat" or msg == '':
                 return
-            
             handle_message(msg, client)
+
+    def handle_broker_msg(self, msg):
+        print(f"mc handler triggered: {msg}")

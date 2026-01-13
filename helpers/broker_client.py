@@ -8,6 +8,7 @@ class broker_client:
         self.client_name = client_name
         self.r = redis.Redis(host="localhost", port=6379, decode_responses=True)
         self.broker = self.r.pubsub()
+        self.handler = None
 
     def send(self, msg):
         msg["client_name"] = self.client_name
@@ -25,7 +26,9 @@ class broker_client:
                 print("Invalid JSON:", message["data"])
                 continue
 
-            print(msg)
+            if self.handler:
+                self.handler(msg)
+                #print(msg)
 
             #print(f"Sender: {msg[0]} - Message: {msg}")
 

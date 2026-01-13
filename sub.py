@@ -6,4 +6,6 @@ broker_client_2.start()
 
 while True:
     msg = input("Message to send: ")
-    broker_client_2.send(msg)
+    broker_client_2.send({
+        "msg": msg,
+    })
